@@ -1,8 +1,8 @@
 #include  "utilizados.h"
 
 int main(int argc, char* argv[]) {
-    int delay, n, p=1, shmid, idfila, *idjob;
-    struct exec exe;
+    int delay, n, p, shmid, idfila, *idjob;
+    struct mensagem rcv, exe;
 
     if(argc < 4 || argc > 5){
       printf("Quantidade invalida de argumentos\n");
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
             printf("Nome do executavel invalido\n");
           }
 
-          strcpy(exe.name, argv[3]);
+          strcpy(exe.exec.name, argv[3]);
     }
 
     else if(argc == 5){
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
             printf("Nome do executavel invalido\n");
           }
 
-          strcpy(exe.name, argv[4]);
+          strcpy(exe.exec.name, argv[4]);
     }
 
     idfila = msgget(KFILA, IPC_CREAT|0600); //Owner pode ler e escrever
@@ -63,14 +63,21 @@ int main(int argc, char* argv[]) {
     idjob = (int *) shmat(shmid, NULL, 0);
 
     //Preenche a struct para execucao
-    exe.job = *idjob + 1;
-    exe.delay = delay;
-    exe.n = n;
+    exe.exec.job = *idjob + 1;
+    exe.exec.delay = delay;
+    exe.exec.n = n;
     exe.prioridade = p;
 
-    msgsnd(idfila, &exe, sizeof(struct exec), 0);
+    printf("%d\n", idfila);
 
-    printf("%d %d %d %s\n", exe.delay, exe.n, exe.prioridade, exe.name);
+    msgsnd(idfila, &exe, sizeof(struct mensagem), 1);
+
+    printf("%d %d %d %s\n", exe.exec.delay, exe.exec.n, exe.prioridade, exe.exec.name);
+
+    msgrcv(idfila, &rcv, sizeof(struct mensagem), 1, IPC_NOWAIT);
+
+    printf("%d %d %d %s\n", rcv.exec.delay, rcv.exec.n, rcv.prioridade, rcv.exec.name);
+
 
     return 0;
 }

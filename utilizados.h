@@ -14,10 +14,16 @@
 #define KJOB  32
 #define KQNT  64
 #define KPAI  128
+#define DONE  8
 
-struct exec {
+struct executavel {
     struct timeval ini, fim;
-    int job, delay, n, prioridade;
+    int job, delay, n;
     double time;
     char name[100];
+};
+
+struct mensagem{
+    struct executavel exec;
+    int prioridade;
 };
