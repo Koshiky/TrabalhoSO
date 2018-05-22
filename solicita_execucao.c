@@ -1,8 +1,8 @@
 #include  "utilizados.h"
 
 int main(int argc, char* argv[]) {
-    int delay, n, p, idshm, idfila, *idjob, pid;
-    struct mensagem msgenv, exe;
+    int delay, n, p, idshm, idfila, *idjob;
+    struct mensagem exe, msgenv;
 
     if(argc < 4 || argc > 5){
       printf("Quantidade invalida de argumentos\n");
@@ -27,8 +27,7 @@ int main(int argc, char* argv[]) {
             printf("Nome do executavel invalido\n");
             return 0;
           }
-
-          strcpy(msgenv.exec.name, argv[3]);
+          else strcpy(msgenv.exec.name, argv[3]);
     }
 
     else if(argc == 5){
@@ -56,8 +55,7 @@ int main(int argc, char* argv[]) {
             printf("Nome do executavel invalido\n");
             return 0;
           }
-
-          strcpy(msgenv.exec.name, argv[4]);
+          else strcpy(msgenv.exec.name, argv[4]);
     }
 
     idfila = msgget(KFILA, IPC_CREAT|0600); //Owner pode ler e escrever
