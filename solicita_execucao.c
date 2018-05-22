@@ -1,8 +1,8 @@
 #include  "utilizados.h"
 
 int main(int argc, char* argv[]) {
-    int delay, n, p, shmid, idfila, *idjob;
-    struct mensagem rcv, exe;
+    int delay, n, p, idshm, idfila, *idjob, pid;
+    struct mensagem msgenv, exe;
 
     if(argc < 4 || argc > 5){
       printf("Quantidade invalida de argumentos\n");
@@ -25,9 +25,10 @@ int main(int argc, char* argv[]) {
 
           if (strlen(argv[3]) <= 0) {
             printf("Nome do executavel invalido\n");
+            return 0;
           }
 
-          strcpy(exe.exec.name, argv[3]);
+          strcpy(msgenv.exec.name, argv[3]);
     }
 
     else if(argc == 5){
@@ -53,31 +54,29 @@ int main(int argc, char* argv[]) {
 
           if (strlen(argv[4]) <= 0) {
             printf("Nome do executavel invalido\n");
+            return 0;
           }
 
-          strcpy(exe.exec.name, argv[4]);
+          strcpy(msgenv.exec.name, argv[4]);
     }
 
     idfila = msgget(KFILA, IPC_CREAT|0600); //Owner pode ler e escrever
-    shmid = shmget(KJOB, sizeof(int), IPC_CREAT|0600);
-    idjob = (int *) shmat(shmid, NULL, 0);
+
+    idshm = shmget(KJOB, sizeof(int), IPC_CREAT|0600);
+    idjob = (int *) shmat(idshm, NULL, 0);
 
     //Preenche a struct para execucao
-    exe.exec.job = *idjob + 1;
-    exe.exec.delay = delay;
-    exe.exec.n = n;
-    exe.prioridade = p;
+    *idjob = *idjob + 1;
+    msgenv.exec.job = *idjob;
+    msgenv.exec.delay = delay;
+    msgenv.exec.n = n;
+    msgenv.prioridade = p;
 
-    printf("%d\n", idfila);
+    msgsnd(idfila, &msgenv, sizeof(struct mensagem), 0);
 
-    msgsnd(idfila, &exe, sizeof(struct mensagem), 1);
-
-    printf("%d %d %d %s\n", exe.exec.delay, exe.exec.n, exe.prioridade, exe.exec.name);
-
-    msgrcv(idfila, &rcv, sizeof(struct mensagem), 1, IPC_NOWAIT);
-
-    printf("%d %d %d %s\n", rcv.exec.delay, rcv.exec.n, rcv.prioridade, rcv.exec.name);
-
+    printf("%d %d %d %d %s\n", msgenv.exec.job, msgenv.exec.delay, msgenv.exec.n, msgenv.prioridade, msgenv.exec.name);
+    msgrcv(idfila, &exe, sizeof(struct mensagem), 0, IPC_NOWAIT);
+    printf("%d %d %d %d %s\n",msgenv.exec.job, exe.exec.delay, exe.exec.n, exe.prioridade, exe.exec.name);
 
     return 0;
 }

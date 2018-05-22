@@ -1,10 +1,10 @@
 #include "utilizados.h"
 
 int main(){
-    int shmid, *pid;
+    int idshm, *pid;
 
     shmid = shmget(KPAI, sizeof(int), IPC_CREAT|0600); //Owner can read and write
-    pid = (int *) shmat(shmid, NULL, 0);
+    pid = (int *) shmat(idshm, NULL, 0);
 
     kill(*pid, SIGUSR1);
 
