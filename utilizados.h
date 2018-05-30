@@ -11,15 +11,19 @@
 #include <sys/wait.h>
 
 #define DONE  8
+#define KFILHO 4
 #define KFILA 16
 #define KJOB  32
 #define KQNT  64
 #define KPAI  128
+#define QUANTUM 5
+#define DOWN 0
+#define UP 1
 
 struct executavel {
     char name[100];
     double time;
-    int job, delay, n;
+    int job, delay, n, pid, inExecution, repeatQueue, direction;
     struct timeval ini, fim;
 };
 
