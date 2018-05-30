@@ -56,11 +56,13 @@ void shutdown(){
 }
 
 int main(){
-    int i, j, shmid, *pidP, *idjob, idfila, idfilho, delay, pid, estado, returnWait;
+    int i, j, shmid, *pidP, *idjob, idfila, idlista, idfilho, delay, pid, estado, returnWait;
     char nome[100];
     struct mensagem msgrec, msgsen;
 
     idfila = msgget(KFILA, IPC_CREAT|0600); //Owner pode ler e escrever
+
+	idlista = msgget(KLISTA, IPC_CREAT|0600); //Owner pode ler e escrever
 
     idfilho = msgget(KFILHO, IPC_CREAT|0600); //Owner pode ler e escrever
 
@@ -175,9 +177,13 @@ int main(){
                 msgsen = msgrec;
 
                 if((pid = fork()) == 0){
+
+					gettimeofday(&msgsen.exec.ini, NULL);
+
+					msgsnd(idlista, &msgsen, sizeof(struct mensagem), 0);
+
                     printf("Delay: %d\n",msgsen.exec.delay);
 
-                    gettimeofday(&msgsen.exec.ini, NULL);
                     sleep(msgsen.exec.delay/10);
 
                     printf("Job: %d - Name: %s sendo repassado ao escalonador\n", msgsen.exec.job, msgsen.exec.name);
