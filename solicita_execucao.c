@@ -1,7 +1,7 @@
 #include  "utilizados.h"
 
 int main(int argc, char* argv[]) {
-    int delay=0, n, p, idshm, idfila, *idjob;
+    int delay=0, n, p, idshm, idfila, idlista, *idjob;
     struct mensagem exe, msgenv;
     char* token;
 
@@ -76,6 +76,7 @@ int main(int argc, char* argv[]) {
     }
 
     idfila = msgget(KFILA, IPC_CREAT|0600); //Owner pode ler e escrever
+    idlista = msgget(KLISTA, IPC_CREAT|0600); //Owner pode ler e escrever
 
     idshm = shmget(KJOB, sizeof(int), IPC_CREAT|0600);
     idjob = (int *) shmat(idshm, NULL, 0);
@@ -92,6 +93,7 @@ int main(int argc, char* argv[]) {
 	msgenv.exec.direction = 0;
 
     msgsnd(idfila, &msgenv, sizeof(struct mensagem), 0);
+    msgsnd(idlista, &msgenv, sizeof(struct mensagem), 0);
 
     printf("Job: %d Delay: %d N: %d Priority: %d Name: %s\n", msgenv.exec.job, msgenv.exec.delay, msgenv.exec.n, msgenv.prioridade, msgenv.exec.name);
 
