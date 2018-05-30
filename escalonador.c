@@ -36,6 +36,9 @@ void shutdown(){
     id = msgget(KFILHO, IPC_CREAT|0600);
     msgctl(id, IPC_RMID, NULL);
 
+    id = msgget(KLISTA, IPC_CREAT|0600);
+    msgctl(id, IPC_RMID, NULL);
+
     id = shmget(KJOB, sizeof(int), IPC_CREAT|0600);
     shmctl(id, IPC_RMID, NULL);
 

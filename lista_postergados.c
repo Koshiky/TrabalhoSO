@@ -13,9 +13,9 @@ int main() {
   struct timeval tv;
   struct timezone tz;
 
-  idfila = msgget(KFILHO, IPC_CREAT|0600); //Owner pode ler e escrever
+  idfila = msgget(KLISTA, IPC_CREAT|0600); //Owner pode ler e escrever
 
-  gettimeofday(NULL, &tz);
+  gettimeofday(&tv, &tz);
 
   //Print dos Jobs
   while(msgrcv(idfila, &msg, sizeof(struct mensagem), 0, IPC_NOWAIT) != -1){
@@ -23,7 +23,6 @@ int main() {
           printf("\n");
           job = msg.exec.job;
       }
-      tv = msg.exec.ini;
       horario = tv.tv_sec % SEG_POR_DIA;
       horario += tz.tz_dsttime * SEG_POR_HORA;
       horario -= tz.tz_minuteswest * SEG_POR_MIN;
@@ -34,10 +33,8 @@ int main() {
       hora = aux / SEG_POR_HORA;
       minutos = (aux % SEG_POR_HORA) / SEG_POR_MIN;
 
-      printf("Job: %d Executavel: %s HHMMSS: %d:%02d Copias: %d Prioridade: %d\n", msg.exec.job, msg.exec.name, hora, minutos, msg.exec.n, msg.prioridade);
+      printf("Job: %d Executavel: %s Horario: %d:%02d Copias: %d Prioridade: %d\n", msg.exec.job, msg.exec.name, hora, minutos, msg.exec.n, msg.prioridade);
   }
-
-    msgctl(idfila, IPC_RMID, NULL);
 
   return 0;
 }
