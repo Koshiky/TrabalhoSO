@@ -18,7 +18,6 @@ int main(int argc, char* argv[]) {
             token = strtok(NULL, "");
             if (token != NULL) {
                 delay += atoi(token)*60;
-                //delay += atoi(token); //para teste
             }
         }
         if(!delay){
@@ -48,7 +47,6 @@ int main(int argc, char* argv[]) {
             token = strtok(NULL, "");
             if (token != NULL) {
                 delay += atoi(token)*60;
-                //delay += atoi(token); //para teste
             }
         }
         if(!delay){
@@ -88,6 +86,10 @@ int main(int argc, char* argv[]) {
     msgenv.exec.delay = delay;
     msgenv.exec.n = n;
     msgenv.prioridade = p;
+	msgenv.exec.inExecution = 0;
+	msgenv.exec.pid = 0;
+	msgenv.exec.repeatQueue = 0;
+	msgenv.exec.direction = 0;
 
     msgsnd(idfila, &msgenv, sizeof(struct mensagem), 0);
 
