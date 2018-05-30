@@ -17,6 +17,7 @@
 #define KQNT  64
 #define KPAI  128
 #define KLISTA 256
+#define KAUX 300
 #define QUANTUM 5
 #define DOWN 0
 #define UP 1

@@ -6,7 +6,7 @@
 
 int main() {
 
-  int idfila, job;
+  int idfila, idaux, job;
   int hora, minutos;
   long horario, aux=0;
   struct mensagem msg;
@@ -14,6 +14,7 @@ int main() {
   struct timezone tz;
 
   idfila = msgget(KLISTA, IPC_CREAT|0600); //Owner pode ler e escrever
+  idaux = msgget(KAUX, IPC_CREAT|0600); //Owner pode ler e escrever
 
   gettimeofday(&tv, &tz);
 
@@ -33,8 +34,14 @@ int main() {
       hora = aux / SEG_POR_HORA;
       minutos = (aux % SEG_POR_HORA) / SEG_POR_MIN;
 
+      msgsnd(idaux, &msg, sizeof(struct mensagem), 0);
+
       printf("Job: %d Executavel: %s Horario: %d:%02d Copias: %d Prioridade: %d\n", msg.exec.job, msg.exec.name, hora, minutos, msg.exec.n, msg.prioridade);
   }
+
+while(msgrcv(idaux, &msg, sizeof(struct mensagem), 0, IPC_NOWAIT) != -1){
+    msgsnd(idfila, &msg, sizeof(struct mensagem), 0);
+}
 
   return 0;
 }
