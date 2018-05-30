@@ -19,7 +19,7 @@ int main() {
   gettimeofday(NULL, &tz);
 
   //Print dos Jobs
-  while(msgrcv(idlista, &msg, sizeof(struct mensagem), 0, IPC_NOWAIT) != -1){
+  while(msgrcv(idfila, &msg, sizeof(struct mensagem), 0, IPC_NOWAIT) != -1){
       if(msg.exec.job != job) {
           printf("\n");
           job = msg.exec.job;
