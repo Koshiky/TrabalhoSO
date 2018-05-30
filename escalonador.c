@@ -180,11 +180,13 @@ int main(){
 
 					gettimeofday(&msgsen.exec.ini, NULL);
 
+					msgsen.exec.pid = getpid();
+
 					msgsnd(idlista, &msgsen, sizeof(struct mensagem), 0);
 
                     printf("Delay: %d\n",msgsen.exec.delay);
 
-                    sleep(msgsen.exec.delay/10);
+                    sleep(msgsen.exec.delay);
 
                     printf("Job: %d - Name: %s sendo repassado ao escalonador\n", msgsen.exec.job, msgsen.exec.name);
 
