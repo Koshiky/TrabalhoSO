@@ -1,8 +1,8 @@
 # Gerente de Escalonamento Postergado de Processos CPU/bound
-###Renato Estevam Nogueira 13/0036579
-###Roberto Nishino Ono 10/0122272
---
-#####Processos
+### Renato Estevam Nogueira 13/0036579
+### Roberto Nishino Ono 10/0122272
+----
+##### Processos
 * solicita\_execucao \<hora:min> \<cópias> \<pri> \<arq_executável> 
 	* \<hora:min> : delay de execução em relação à hora corrente (obrigatório)
 	* \<cópias> : número de cópias que serão executadas (obrigatório)
@@ -15,13 +15,13 @@
 * lista_postergados
 * shutdown
 
---
-####Mecanismos de Comunicação Interprocessos
+----
+#### Mecanismos de Comunicação Interprocessos
 * Filas de Mensagens
 * Memória Compartilhada
 
---
-####Estruturas de Dados
+----
+#### Estruturas de Dados
 ```c
 struct executavel {
     char name[100];
