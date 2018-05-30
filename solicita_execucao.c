@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
 
     msgsnd(idfila, &msgenv, sizeof(struct mensagem), 0);
 
-    printf("%d %d %d %d %s\n", msgenv.exec.job, msgenv.exec.delay, msgenv.exec.n, msgenv.prioridade, msgenv.exec.name);
+    printf("Job: %d Delay: %d N: %d Priority: %d Name: %s\n", msgenv.exec.job, msgenv.exec.delay, msgenv.exec.n, msgenv.prioridade, msgenv.exec.name);
 
     return 0;
 }
