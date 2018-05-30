@@ -6,24 +6,25 @@
 
 int main() {
 
-  int idfila, job;
+  int idlista, job;
   int hora, minutos;
   long horario, aux=0;
   struct mensagem msg;
   struct timeval tv;
   struct timezone tz;
 
-  idfila = msgget(KLISTA, IPC_CREAT|0600); //Owner pode ler e escrever
+  idlista = msgget(KLISTA, IPC_CREAT|0600); //Owner pode ler e escrever
 
-  gettimeofday(&tv, &tz);
+  gettimeofday(NULL, &tz);
 
   //Print dos Jobs
-  while(msgrcv(idfila, &msg, sizeof(struct mensagem), 0, IPC_NOWAIT) != -1){
+  while(msgrcv(idlista, &msg, sizeof(struct mensagem), 0, IPC_NOWAIT) != -1){
       if(msg.exec.job != job) {
           printf("\n");
           job = msg.exec.job;
       }
-      horario = tv.tv_sec % SEG_POR_DIA;
+
+      horario = msg.exec.ini.tv_sec % SEG_POR_DIA;
       horario += tz.tz_dsttime * SEG_POR_HORA;
       horario -= tz.tz_minuteswest * SEG_POR_MIN;
       horario = (horario + SEG_POR_DIA) % SEG_POR_DIA;
